@@ -22,3 +22,7 @@ RUN TESSERACT_VERSION="4.0.0" \
       && make \
       && make install \
       && ldconfig
+
+RUN apt-get install -y tesseract-ocr-eng \
+      && wget https://github.com/tesseract-ocr/tessdata/raw/master/eng.traineddata \
+      && mv -v eng.traineddata /usr/local/share/tessdata/
