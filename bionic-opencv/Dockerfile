@@ -9,7 +9,7 @@ ENV NUMPY_VERSION="1.15.4"
 ENV PYTHON_PIP_VERSION="19.1.1"
 
 RUN apt-get update && \
-    apt-get install -y \
+    apt-get install -y --no-install-recommends \
     build-essential \
     cmake \
     git \
@@ -33,6 +33,7 @@ RUN apt-get update && \
     libffi-dev \
     lsb-release \
     libreadline-dev \
+    ca-certificates \
     apt-transport-https \
     && rm -rf /var/lib/apt/lists/*
     
