@@ -1,6 +1,6 @@
-FROM rexlow/bionic-opencv:cv2-3.4.3
+FROM rexlow/bionic-opencv:latest
 
-RUN LEPTONICA_VERSION="1.76.0" \
+RUN LEPTONICA_VERSION="1.78.0" \
       && mkdir -p /home/build_workspace/leptonica \
       && cd /home/build_workspace/leptonica \
       && curl -L "https://github.com/DanBloomberg/leptonica/releases/download/$LEPTONICA_VERSION/leptonica-$LEPTONICA_VERSION.tar.gz" | tar zx \
@@ -10,9 +10,10 @@ RUN LEPTONICA_VERSION="1.76.0" \
       && ../configure \
       && make \
       && make install \
-      && make -j4 check
+      && make -j4
 
-RUN TESSERACT_VERSION="4.0.0" \
+RUN TESSERACT_VERSION="4.1.0" \
+      && apt-get install -y automake libtool \
       && mkdir -p /home/build_workspace/tesseract \
       && cd /home/build_workspace/tesseract \
       && curl -L "https://github.com/tesseract-ocr/tesseract/archive/$TESSERACT_VERSION.tar.gz" | tar zx \
