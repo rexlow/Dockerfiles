@@ -33,6 +33,7 @@ RUN apt-get update && \
     libffi-dev \
     lsb-release \
     libreadline-dev \
+    libsqlite3-dev \
     apt-transport-https \
     && rm -rf /var/lib/apt/lists/*
     
