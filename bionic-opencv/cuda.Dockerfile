@@ -1,4 +1,4 @@
-FROM nvidia/cuda:9.2-devel-ubuntu18.04
+FROM nvidia/cuda:10.2-cudnn7-devel-ubuntu18.04
 ENV DEBIAN_FRONTEND=noninteractive
 
 ENV LANG C.UTF-8
@@ -100,6 +100,7 @@ RUN cd / \
     && unzip opencv_contrib.zip \
     && mkdir /opencv-${OPENCV_VERSION}/cmake_binary \
     && cd /opencv-${OPENCV_VERSION}/cmake_binary \
+    && cat /usr/include/cudnn.h | grep CUDNN_MAJOR -A 2 \
     && cmake -DOPENCV_EXTRA_MODULES_PATH=/opencv_contrib-${OPENCV_VERSION}/modules \
              -DBUILD_TIFF=ON \
              -DBUILD_opencv_java=OFF \
@@ -108,7 +109,7 @@ RUN cd / \
              -DOPENCV_DNN_CUDA=ON \
              -DENABLE_FAST_MATH=1 \
              -DCUDA_FAST_MATH=1 \
-             -DCUDA_ARCH_BIN=7.0 \
+             -DCUDA_ARCH_BIN=7.5 \
              -DWITH_CUBLAS=1 \
              -DWITH_OPENGL=OFF \
              -DWITH_OPENCL=OFF \
