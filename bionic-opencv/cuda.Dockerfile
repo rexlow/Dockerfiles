@@ -96,10 +96,8 @@ RUN pip3 install numpy==${NUMPY_VERSION}
 RUN cd / \
     && wget -O opencv.zip https://github.com/opencv/opencv/archive/${OPENCV_VERSION}.zip \
     && wget -O opencv_contrib.zip https://github.com/opencv/opencv_contrib/archive/${OPENCV_VERSION}.zip \
-    && ls \
     && unzip opencv.zip \
     && unzip opencv_contrib.zip \
-    && ls \
     && mkdir /opencv-${OPENCV_VERSION}/cmake_binary \
     && cd /opencv-${OPENCV_VERSION}/cmake_binary \
     && cmake -DOPENCV_EXTRA_MODULES_PATH=/opencv_contrib-${OPENCV_VERSION}/modules \
