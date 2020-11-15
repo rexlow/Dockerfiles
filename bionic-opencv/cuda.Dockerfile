@@ -1,10 +1,9 @@
-FROM nvidia/cuda:9.2-devel-ubuntu18.04
+FROM nvidia/cuda:10.2-cudnn7-devel-ubuntu18.04
 ENV DEBIAN_FRONTEND=noninteractive
 
 ENV LANG C.UTF-8
-ENV PYTHON_VERSION="3.7.5"
-ENV OPENCV_VERSION="3.4.3"
-ENV FFMPEG_VERSION="3.4.1"
+ENV PYTHON_VERSION="3.8.5"
+ENV OPENCV_VERSION="4.5.0"
 ENV NUMPY_VERSION="1.17.4"
 ENV PYTHON_PIP_VERSION="19.3.1"
 
@@ -94,13 +93,24 @@ RUN set -ex; \
 
 RUN pip3 install numpy==${NUMPY_VERSION}
 
-RUN wget https://github.com/opencv/opencv/archive/${OPENCV_VERSION}.zip \
-    && unzip ${OPENCV_VERSION}.zip \
+RUN cd / \
+    && wget -O opencv.zip https://github.com/opencv/opencv/archive/${OPENCV_VERSION}.zip \
+    && wget -O opencv_contrib.zip https://github.com/opencv/opencv_contrib/archive/${OPENCV_VERSION}.zip \
+    && unzip opencv.zip \
+    && unzip opencv_contrib.zip \
     && mkdir /opencv-${OPENCV_VERSION}/cmake_binary \
     && cd /opencv-${OPENCV_VERSION}/cmake_binary \
-    && cmake -DBUILD_TIFF=ON \
+    && cat /usr/include/cudnn.h | grep CUDNN_MAJOR -A 2 \
+    && cmake -DOPENCV_EXTRA_MODULES_PATH=/opencv_contrib-${OPENCV_VERSION}/modules \
+             -DBUILD_TIFF=ON \
              -DBUILD_opencv_java=OFF \
-             -DWITH_CUDA=OFF \
+             -DWITH_CUDA=ON \
+             -DWITH_CUDNN=ON \
+             -DOPENCV_DNN_CUDA=ON \
+             -DENABLE_FAST_MATH=1 \
+             -DCUDA_FAST_MATH=1 \
+             -DCUDA_ARCH_BIN=7.5 \
+             -DWITH_CUBLAS=1 \
              -DWITH_OPENGL=OFF \
              -DWITH_OPENCL=OFF \
              -DWITH_IPP=ON \
@@ -116,5 +126,6 @@ RUN wget https://github.com/opencv/opencv/archive/${OPENCV_VERSION}.zip \
              -DPYTHON_PACKAGES_PATH=$(python3 -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())") \
              .. \
     && make install \
-    && rm /${OPENCV_VERSION}.zip \
-    && rm -r /opencv-${OPENCV_VERSION}
+    && rm /opencv.zip /opencv_contrib.zip \
+    && rm -r /opencv-${OPENCV_VERSION} \
+    && rm -r /opencv_contrib-${OPENCV_VERSION}
